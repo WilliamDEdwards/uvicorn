@@ -423,6 +423,14 @@ def forwarded_allow_ips(request: pytest.FixtureRequest) -> Iterator[str]:
         del os.environ["FORWARDED_ALLOW_IPS"]
 
 
+def test_forwarded_allow_ips_default(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("FORWARDED_ALLOW_IPS", raising=False)
+
+    config = Config(app=asgi_app)
+
+    assert config.forwarded_allow_ips == "127.0.0.1,::1"
+
+
 def test_env_file(
     web_concurrency: int,
     forwarded_allow_ips: str,
